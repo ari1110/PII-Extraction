@@ -7,3 +7,4 @@ def test_rel_project():
     root = Path(__file__).parent
     project_assets(root)
     project_run(root, "all", capture=True)
+    
