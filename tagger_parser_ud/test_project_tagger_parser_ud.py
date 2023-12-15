@@ -16,24 +16,22 @@ from spacy.training import validate_examples, validate_get_examples
 from pathlib import Path
 from spacy.lang.en import English
 from spacy.scorer import Scorer
-
+from spacy.pipeline import DependencyParser
 
 def test_taggerparser_ud_project():
     nlp = spacy.load("en_core_web_sm")
-    # nlp = spacy.blank("en")  # or load a different language if you're not working with English
-    tagger = nlp.add_pipe("tagger")
-    parser = nlp.add_pipe("parser")
-
-    # Create some Example objects with the correct annotations
     examples = []
     scorer = Scorer(nlp.vocab)
+    tagger = Tagger(nlp.vocab)
+    parser = DependencyParser(nlp.vocab)
+
+    # Initialize the tagger and parser  
 
     for _ in range(100):  # replace with your actual data
         doc = Doc(nlp.vocab, words=["This", "is", "a", "sentence", "."])
         example = Example.from_dict(doc, {"tags": ["DET", "VERB", "DET", "NOUN", "PUNCT"]})
         examples.append(example)
 
-    tagger.initialize(lambda: examples, nlp=nlp)
     parser.initialize(lambda: examples, nlp=nlp)
 
     # Train the tagger and parser
