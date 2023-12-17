@@ -58,7 +58,7 @@ class ExcelAnalyzer(BatchAnalyzerEngine):
 
 if __name__ == "__main__":
 
-    analyzer = CSVAnalyzer()
+    analyzer = ExcelAnalyzer()
     analyzer_results = analyzer.analyze_excel('/workspaces/PII-Extraction/tagger_parser_ud/CSV_PII_Analyzer/sample_data.csv',
                                             language="en")
     pprint.pprint(analyzer_results)
