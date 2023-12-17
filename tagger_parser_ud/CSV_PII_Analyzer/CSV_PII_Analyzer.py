@@ -1,4 +1,5 @@
-import csv
+import os
+import pandas as pd
 import pprint
 from typing import List, Iterable, Optional
 
@@ -22,27 +23,43 @@ id,name,city,comments
 """
 
 
-class CSVAnalyzer(BatchAnalyzerEngine):
+class ExcelAnalyzer(BatchAnalyzerEngine):
 
-    def analyze_csv(
-        self,
-        csv_full_path: str,
-        language: str,
-        keys_to_skip: Optional[List[str]] = None,
-        **kwargs,
-    ) -> Iterable[DictAnalyzerResult]:
+    def analyze_excel(self, excel_file_name, language="en", keys_to_skip=None, **kwargs):
+        # Construct the absolute path to the Excel file
+        excel_full_path = os.path.join(os.path.dirname(__file__), excel_file_name)
+        
+        # Read the Excel file into a DataFrame
+        df = pd.read_excel(excel_full_path)
 
-        with open(csv_full_path, 'r') as csv_file:
-            csv_list = list(csv.reader(csv_file))
-            csv_dict = {header: list(map(str, values)) for header, *values in zip(*csv_list)}
-            analyzer_results = self.analyze_dict(csv_dict, language, keys_to_skip)
-            return list(analyzer_results)
+        # Convert the DataFrame into a dictionary
+        data_dict = df.to_dict('list')
+
+        # Analyze the dictionary
+        analyzer_results = self.analyze_dict(data_dict, language, keys_to_skip)
+
+        return list(analyzer_results)
+    
+# class CSVAnalyzer(BatchAnalyzerEngine):
+    # def analyze_csv(
+    #     self,
+    #     csv_full_path: str,
+    #     language: str,
+    #     keys_to_skip: Optional[List[str]] = None,
+    #     **kwargs,
+    # ) -> Iterable[DictAnalyzerResult]:
+
+    #     with open(csv_full_path, 'r', encoding='utf-8') as csv_file:
+    #         csv_list = list(csv.reader(csv_file))
+    #         csv_dict = {header: list(map(str, values)) for header, *values in zip(*csv_list)}
+    #         analyzer_results = self.analyze_dict(csv_dict, language, keys_to_skip)
+    #         return list(analyzer_results)
 
 
 if __name__ == "__main__":
 
     analyzer = CSVAnalyzer()
-    analyzer_results = analyzer.analyze_csv('./sample_data.csv',
+    analyzer_results = analyzer.analyze_excel('/workspaces/PII-Extraction/tagger_parser_ud/CSV_PII_Analyzer/sample_data.csv',
                                             language="en")
     pprint.pprint(analyzer_results)
 
