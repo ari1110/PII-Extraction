@@ -42,7 +42,7 @@ class CSVAnalyzer(BatchAnalyzerEngine):
 if __name__ == "__main__":
 
     analyzer = CSVAnalyzer()
-    analyzer_results = analyzer.analyze_csv('./csv_sample_data/sample_data.csv',
+    analyzer_results = analyzer.analyze_csv('./sample_data.csv',
                                             language="en")
     pprint.pprint(analyzer_results)
 
